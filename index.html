@@ -5,56 +5,164 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Línea de Tiempo – Contratos de Concesión MOP (1993–2026)</title>
 <style>
+:root{
+  --bg:#f4f3ef;
+  --bg-card:#ffffff;
+  --bg-alt:#fafaf6;
+  --bg-sunken:#f0efea;
+  --ink:#15161a;
+  --ink-soft:#3d3e44;
+  --muted:#74757c;
+  --muted-2:#9a9b9f;
+  --line:#e4e2d9;
+  --line-soft:#eeece4;
+  --accent:#1a3a6e;
+  --accent-2:#185FA5;
+  --green:#0F6E56;
+  --orange:#D85A30;
+  --red:#dc3545;
+  --shadow-sm:0 1px 2px rgba(20,22,30,0.04);
+  --shadow:0 1px 3px rgba(20,22,30,0.05), 0 8px 24px -8px rgba(20,22,30,0.08);
+  --radius:10px;
+  --radius-sm:6px;
+  --font:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI','Helvetica Neue',Arial,sans-serif;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f5f4f0;color:#1a1a18;padding:20px 24px}
-h1{font-size:17px;font-weight:700;margin-bottom:3px;color:#1a1a18}
-.sub{font-size:12px;color:#777;margin-bottom:14px}
-.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-.sc{background:#fff;border:1px solid #e0dfd8;border-radius:8px;padding:8px 14px;text-align:center;min-width:100px}
-.sc .num{font-size:20px;font-weight:700}
-.sc .lbl{font-size:10px;color:#777;margin-top:1px}
-.sc.live{background:#1a1a18;border-color:#1a1a18}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);padding:28px 32px 80px;letter-spacing:-0.005em}
+
+/* === HEADER === */
+.hdr{margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.hdr-eyebrow{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);background:rgba(26,58,110,0.08);padding:3px 9px;border-radius:4px;margin-bottom:10px}
+h1{font-size:24px;font-weight:700;color:var(--ink);letter-spacing:-0.02em;line-height:1.2}
+.sub{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+/* === SECTION TITLES === */
+.section-title{font-size:11px;font-weight:700;color:var(--ink);margin:24px 0 12px;letter-spacing:1px;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:8px}
+.section-title .hint{font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+
+/* === LIVE COUNTER (top stats strip) === */
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.sc{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 16px;text-align:left;min-width:108px;box-shadow:var(--shadow-sm)}
+.sc .num{font-size:22px;font-weight:700;line-height:1.05;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+.sc .lbl{font-size:10px;color:var(--muted);margin-top:5px;letter-spacing:.3px;text-transform:uppercase;font-weight:600}
+.sc.live{background:linear-gradient(135deg,#15161a,#252731);border-color:#15161a;box-shadow:0 2px 8px rgba(20,22,30,0.15)}
 .sc.live .num{color:#fff}
-.sc.live .lbl{color:#bbb}
-.sc.live .num span.sep{opacity:.4;margin:0 4px;font-weight:400}
-.sc.live .num span.sub{font-size:13px;font-weight:500;opacity:.75}
-.controls{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.sc.live .lbl{color:#aaa}
+.sc.live .num span.sep{opacity:.4;margin:0 4px;font-weight:300}
+.sc.live .num span.sub{font-size:14px;font-weight:500;opacity:.7}
+
+/* === FILTER PILLS === */
+.controls{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow-sm)}
 .ctrl-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.ctrl-row .lbl{font-size:11px;color:#777;font-weight:700;text-transform:uppercase;letter-spacing:.4px;min-width:60px}
-.pill{font-size:11.5px;padding:4px 10px;border-radius:14px;border:1px solid #d4d3cb;background:#fff;color:#555;cursor:pointer;user-select:none;transition:all .12s;display:inline-flex;align-items:center;gap:4px;line-height:1.3}
-.pill:hover{border-color:#999;color:#1a1a18}
-.pill.on{background:#1a1a18;color:#fff;border-color:#1a1a18;font-weight:600}
-.pill.on:hover{background:#000}
-.pill .cnt{font-size:10px;opacity:0.65;font-weight:400}
-.pill.on .cnt{opacity:0.7}
-.ctrl-actions{font-size:10.5px;color:#888;cursor:pointer;text-decoration:underline;margin-left:6px}
-.ctrl-actions:hover{color:#1a1a18}
-.legend-wrap{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:14px}
-.leg-group{display:flex;flex-direction:column;gap:5px}
-.leg-group .g-title{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-.legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:11px;color:#555}
-.legend span{display:flex;align-items:center;gap:5px}
-.dot{width:12px;height:10px;border-radius:2px;flex-shrink:0}
-#wrap{overflow-x:auto;background:#fff;border-radius:10px;border:1px solid #e0dfd8;padding:12px 12px 16px}
+.ctrl-row .lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;min-width:64px}
+.pill{font-size:11.5px;padding:5px 11px;border-radius:16px;border:1px solid var(--line);background:var(--bg-card);color:var(--ink-soft);cursor:pointer;user-select:none;transition:all .15s ease;display:inline-flex;align-items:center;gap:5px;line-height:1.3;font-weight:500}
+.pill:hover{border-color:var(--ink-soft);color:var(--ink);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.pill.on{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600;box-shadow:0 2px 6px rgba(20,22,30,0.18)}
+.pill.on:hover{background:#000;transform:translateY(-1px)}
+.pill .cnt{font-size:10px;opacity:0.6;font-weight:500;font-variant-numeric:tabular-nums}
+.pill.on .cnt{opacity:0.75}
+.ctrl-actions{font-size:10.5px;color:var(--muted);cursor:pointer;text-decoration:none;margin-left:6px;padding:3px 8px;border-radius:4px;transition:all .12s;font-weight:500}
+.ctrl-actions:hover{color:var(--ink);background:var(--bg-sunken)}
+
+/* === LEGEND === */
+.legend-wrap{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:18px;background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow-sm)}
+.leg-group{display:flex;flex-direction:column;gap:6px}
+.leg-group .g-title{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:11.5px;color:var(--ink-soft)}
+.legend span{display:flex;align-items:center;gap:6px}
+.dot{width:13px;height:11px;border-radius:2px;flex-shrink:0;box-shadow:inset 0 0 0 0.5px rgba(0,0,0,0.07)}
+
+/* === KPI CARDS === */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow-sm);transition:transform .15s,box-shadow .15s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.kpi .v{font-size:24px;font-weight:700;color:var(--ink);line-height:1.05;letter-spacing:-0.025em;font-variant-numeric:tabular-nums}
+.kpi .v .u{font-size:13px;font-weight:500;color:var(--muted-2);margin-left:4px;letter-spacing:0}
+.kpi .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-top:6px;font-weight:600}
+.kpi.accent{background:linear-gradient(135deg,#15161a 0%,#252731 100%);border-color:#15161a;color:#fff;box-shadow:0 4px 16px -4px rgba(20,22,30,0.25)}
+.kpi.accent .v{color:#fff}
+.kpi.accent .v .u{color:rgba(255,255,255,0.55)}
+.kpi.accent .k{color:rgba(255,255,255,0.65)}
+.kpi.accent:hover{box-shadow:0 8px 24px -4px rgba(20,22,30,0.35)}
+
+/* === DASHBOARD GRID === */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 14px;box-shadow:var(--shadow-sm);transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow)}
+.card h3{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:2px;text-transform:uppercase;letter-spacing:1px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.card h3 .ttotal{font-size:11px;font-weight:600;color:var(--accent-2);text-transform:none;letter-spacing:0;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.card .desc{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5;letter-spacing:0}
+.card svg{display:block;width:100%;height:auto}
+
+/* === CHART STYLES === */
+.bar-h{cursor:pointer;transition:opacity .15s}
+.bar-h:hover{opacity:0.78}
+.donut-slice{cursor:pointer;transition:opacity .15s}
+.donut-slice:hover{opacity:0.78}
+.axis-label{font-size:10px;fill:var(--muted-2);font-family:var(--font)}
+.axis-value{font-size:10px;fill:var(--ink-soft);font-weight:500;font-family:var(--font)}
+.bar-value{font-size:10.5px;fill:var(--ink);font-weight:600;font-family:var(--font);font-variant-numeric:tabular-nums}
+.bar-value-white{font-size:10.5px;fill:#fff;font-weight:600;font-family:var(--font);font-variant-numeric:tabular-nums}
+
+/* === TIMELINE GANTT === */
+#wrap{overflow-x:auto;background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--line);padding:14px 16px 18px;box-shadow:var(--shadow-sm)}
 #container{min-width:900px}
-svg text{font-family:Arial,sans-serif}
+svg text{font-family:var(--font)}
 .bar{cursor:pointer}
 .bar:hover{opacity:0.78!important}
-#tt{position:fixed;background:#fff;border:1px solid #ccc;border-radius:8px;padding:10px 13px;font-size:12px;z-index:999;display:none;max-width:320px;line-height:1.75;color:#1a1a18;box-shadow:0 2px 12px rgba(0,0,0,0.13);pointer-events:none}
-#tt b{font-weight:700}
-#tt .sec{color:#888}
-#tt .badge{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700;margin-left:4px}
-footer{margin-top:12px;font-size:10.5px;color:#aaa;line-height:1.6}
+
+/* === TOOLTIP === */
+#tt{position:fixed;background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:11px 14px;font-size:12px;z-index:999;display:none;max-width:330px;line-height:1.7;color:var(--ink);box-shadow:0 4px 18px rgba(20,22,30,0.15);pointer-events:none;font-family:var(--font)}
+#tt b{font-weight:700;color:var(--ink)}
+#tt .sec{color:var(--muted)}
+#tt .badge{display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:700;margin-left:4px}
+
+/* === MULTI-REGIONAL TABLE === */
+.multi-tbl{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:4px;font-family:var(--font)}
+.multi-tbl th{text-align:left;font-weight:700;color:var(--muted);border-bottom:1px solid var(--line);padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:.8px}
+.multi-tbl th.r{text-align:right}
+.multi-tbl td{border-bottom:1px solid var(--line-soft);padding:9px 10px;vertical-align:middle;line-height:1.4}
+.multi-tbl td.r{text-align:right;font-variant-numeric:tabular-nums}
+.multi-tbl tr:last-child td{border-bottom:none}
+.multi-tbl tr:hover td{background:var(--bg-alt)}
+.multi-tbl .reg-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:9px;background:var(--bg-sunken);color:var(--ink-soft);margin:1px 2px 1px 0;white-space:nowrap;font-weight:500}
+.multi-tbl .reg-tag.sel{background:var(--ink);color:#fff;font-weight:700}
+.multi-tbl .pname{font-weight:600;color:var(--ink)}
+.multi-tbl .psector{font-size:10px;color:var(--muted);margin-top:2px;font-weight:500}
+.multi-tbl .attrib{font-weight:700;color:var(--accent-2)}
+.multi-tbl tfoot td{border-top:2px solid var(--ink);background:var(--bg-alt);font-weight:700;font-size:12px;color:var(--ink)}
+
+/* === FOOTER === */
+footer{margin-top:32px;padding:24px 24px 20px;background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);font-family:var(--font)}
+footer h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px;letter-spacing:-0.01em}
+footer .ft-sub{font-size:11.5px;color:var(--muted);line-height:1.55;margin-bottom:14px}
+footer .ft-block{margin-bottom:14px;font-size:11.5px;line-height:1.7}
+footer .ft-block strong{color:var(--ink);font-weight:600}
+footer .ft-block b{color:var(--ink);font-weight:700}
+footer .ft-source{background:linear-gradient(135deg,rgba(26,58,110,0.04),rgba(26,58,110,0.01));border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 4px 4px 0;margin-bottom:14px;font-size:11.5px;line-height:1.6;color:var(--ink-soft)}
+footer .ft-list{margin:6px 0 0 18px;padding:0;font-size:11.5px;color:var(--ink-soft);line-height:1.75}
+footer .ft-list li{margin:3px 0}
+footer .ft-list li strong{color:var(--ink)}
+footer .ft-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+footer .ft-links a{font-size:11.5px;color:var(--accent);text-decoration:none;padding:4px 10px;background:rgba(26,58,110,0.06);border-radius:4px;font-weight:500;transition:all .12s}
+footer .ft-links a:hover{background:rgba(26,58,110,0.12);color:var(--ink)}
+footer .ft-meta{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);font-size:11px;line-height:1.7;color:var(--muted)}
+footer .ft-meta strong{color:var(--ink-soft);font-weight:600}
 </style>
 </head>
 <body>
-<h1>Línea de Tiempo – Contratos de Concesión MOP (1993 – 2026)</h1>
-<p class="sub">Hoja Contratos-202601 · 123 contratos · Concesiones de una misma infraestructura apiladas verticalmente en la misma fila para evitar superposición visual</p>
+<div class="hdr">
+<span class="hdr-eyebrow">Dashboard analítico</span>
+<h1>Concesiones de Obra Pública en Chile</h1>
+<p class="sub">Línea de tiempo y análisis de los 123 contratos vigentes y finalizados del sistema de concesiones MOP · Período 1993 – 2070 · 7 sectores · 16 regiones</p>
+</div>
 
 <div class="stats" id="stats"></div>
 
 <div class="controls">
   <div class="ctrl-row"><span class="lbl">Sector</span><div id="fS"></div><span class="ctrl-actions" data-cat="S">limpiar</span></div>
+  <div class="ctrl-row"><span class="lbl">Región</span><div id="fR" style="display:flex;gap:6px;flex-wrap:wrap"></div><span class="ctrl-actions" data-cat="R">limpiar</span></div>
   <div class="ctrl-row"><span class="lbl">Estado</span><div id="fE" style="display:flex;gap:6px;flex-wrap:wrap"></div><span class="ctrl-actions" data-cat="E">limpiar</span></div>
   <div class="ctrl-row"><span class="lbl">Plazo</span><div id="fP" style="display:flex;gap:6px;flex-wrap:wrap"></div><span class="ctrl-actions" data-cat="P">limpiar</span></div>
 </div>
@@ -87,40 +195,78 @@ footer{margin-top:12px;font-size:10.5px;color:#aaa;line-height:1.6}
   </div>
 </div>
 
+<div class="section-title">Análisis agregado <span class="hint">— valores reflejan los filtros activos · presupuestos en UF</span></div>
+<div class="kpi-row" id="kpiRow"></div>
+
+<div class="dash-grid">
+  <div class="card">
+    <h3>Inversión por región <span class="ttotal" id="tot_inv_region"></span></h3>
+    <div class="desc">Suma del presupuesto oficial estimado. Proyectos multirregionales se reparten en partes iguales entre regiones involucradas.</div>
+    <div id="ch_inv_region"></div>
+  </div>
+  <div class="card">
+    <h3>Contratos por región <span class="ttotal" id="tot_num_region"></span></h3>
+    <div class="desc">Conteo de contratos. Proyectos multirregionales suman fracción en cada región.</div>
+    <div id="ch_num_region"></div>
+  </div>
+  <div class="card">
+    <h3>Inversión por sector <span class="ttotal" id="tot_inv_sector"></span></h3>
+    <div class="desc">Distribución del presupuesto total entre los 7 sectores de concesiones MOP.</div>
+    <div id="ch_inv_sector"></div>
+  </div>
+  <div class="card" style="grid-column: span 2">
+    <h3>Contratos activos en el tiempo <span class="ttotal" id="tot_count_time"></span></h3>
+    <div class="desc">Stock de concesiones vigentes en cada momento. La línea sube cuando inicia una nueva concesión, se mantiene constante durante su vigencia y baja cuando termina.</div>
+    <div id="ch_count_time"></div>
+  </div>
+  <div class="card" style="grid-column: span 2">
+    <h3>Inversión activa en el tiempo <span class="ttotal" id="tot_inv_time"></span></h3>
+    <div class="desc">Suma del presupuesto comprometido en concesiones vigentes en cada momento. Sube al iniciar contratos, baja al finalizarlos.</div>
+    <div id="ch_inv_time"></div>
+  </div>
+</div>
+
+<div class="card" id="multi_card" style="display:none;margin-bottom:16px"></div>
+
+<div class="section-title">Línea de tiempo de contratos <span class="hint">— eje horizontal: duración temporal · grosor: presupuesto</span></div>
+
 <div id="wrap"><div id="container"></div></div>
 <div id="tt"></div>
 
-<footer style="margin-top:24px;padding-top:16px;border-top:1px solid #e0dfd8;font-size:11px;color:#666;line-height:1.7">
-  <div style="margin-bottom:10px">
-    <strong style="color:#1a1a18">Línea de Tiempo – Contratos adjudicados, Concesiones de Infraestructura Pública (01.01.1993- 09.01.2026)</strong><br>
-    <span style="color:#888">Visualización elaborada a partir de la base de datos pública de la <strong>Dirección General de Concesiones (DGC)</strong>, Ministerio de Obras Públicas (MOP) — Gobierno de Chile.</span>
+<footer>
+  <h4>Dashboard – Contratos adjudicados, Concesiones de Infraestructura Pública (01.01.1993- 09.01.2026)</h4>
+  <div class="ft-sub">Visualización analítica elaborada a partir de la base de datos pública de la <strong style="color:var(--ink)">Dirección General de Concesiones (DGC)</strong>, Ministerio de Obras Públicas (MOP) — Gobierno de Chile.</div>
+
+  <div class="ft-source">
+    <strong>Fuente de datos:</strong> Base de datos de Contratos de Concesión, DGC-MOP · <b>Última actualización: 29 de enero de 2026</b><br>
+    Todos los gráficos, indicadores y agregaciones de este dashboard fueron construidos íntegramente a partir de los datos contenidos en dicha base, sin información externa adicional.
   </div>
 
-  <div style="margin-bottom:10px">
-    <strong style="color:#1a1a18">Fuente de datos:</strong> Base de datos de Contratos de Concesión, DGC-MOP · <strong>Última actualización: 29 de enero de 2026</strong> · Los gráficos presentados fueron construidos íntegramente a partir de los datos contenidos en dicha base.
-  </div>
-
-  <div style="margin-bottom:10px">
-    <strong style="color:#1a1a18">Variables recopiladas por contrato:</strong>
-    <ul style="margin:4px 0 0 18px;padding:0;line-height:1.6">
-      <li><strong>Hitos contractuales:</strong> fechas de llamado a licitación, adjudicación, inicio del contrato, inicio de obras, puesta en servicio y término.</li>
-      <li><strong>Sociedades concesionarias:</strong> nombre y RUT.</li>
-      <li><strong>Características de la concesión:</strong> descripción, sector del proyecto y región geográfica.</li>
-      <li><strong>Origen del proyecto:</strong> iniciativa pública, iniciativa privada o nueva licitación de contrato terminado.</li>
-      <li><strong>Montos asociados:</strong> presupuesto oficial estimado e inversión materializada (en UF).</li>
-      <li><strong>Vínculos a sitios oficiales:</strong> sitio web de Concesiones (MOP) y Comisión para el Mercado Financiero (CMF).</li>
+  <div class="ft-block">
+    <strong>Variables recopiladas por cada contrato de concesión:</strong>
+    <ul class="ft-list">
+      <li><strong>a) Hitos contractuales:</strong> fechas de llamado a licitación, adjudicación, inicio del contrato, inicio de obras, puesta en servicio y término.</li>
+      <li><strong>b) Sociedades concesionarias:</strong> nombre y RUT.</li>
+      <li><strong>c) Características de la concesión:</strong> descripción, sector del proyecto y región geográfica.</li>
+      <li><strong>d) Origen del proyecto:</strong> iniciativa pública, iniciativa privada o nueva licitación de contrato terminado.</li>
+      <li><strong>e) Montos asociados:</strong> presupuesto oficial estimado e inversión materializada (en UF).</li>
+      <li><strong>f) Vínculos a sitios oficiales:</strong> sitio web de Concesiones (MOP) y Comisión para el Mercado Financiero (CMF).</li>
     </ul>
   </div>
 
-  <div style="margin-bottom:10px">
-    <strong style="color:#1a1a18">Enlaces de referencia:</strong>
-    <a href="https://concesiones.mop.gob.cl/" target="_blank" rel="noopener" style="color:#185FA5;text-decoration:none">Dirección General de Concesiones</a> ·
-    <a href="https://datos.gob.cl/organization/direccion-general-de-concesiones" target="_blank" rel="noopener" style="color:#185FA5;text-decoration:none">Base de datos de contratos adjudicados</a> ·
+  <div class="ft-block">
+    <strong>Enlaces de referencia:</strong>
+    <div class="ft-links">
+      <a href="https://concesiones.mop.gob.cl/" target="_blank" rel="noopener">Dirección General de Concesiones</a>
+      <a href="https://datos.gob.cl/dataset/contratos-adjudicados-concesiones-de-infraestructura-publica-01-01-1993-09-01-2026" target="_blank" rel="noopener">Base de datos </a>
+     </div>
   </div>
 
-  <div style="margin-top:14px;padding-top:10px;border-top:1px dashed #e0dfd8;color:#999;font-size:10.5px">
-    <strong>Autores:</strong> [David Alarcón][José Oliveros] · <strong>Fecha de elaboración:</strong> Junio 2026 · 
-    Visualización con fines analíticos e ilustrativos. Los datos pertenecen a la DGC-MOP y se reproducen bajo el marco de transparencia activa del Estado de Chile.
+  <div class="ft-meta">
+    <strong>Autores:</strong> [David Alarcón][José Oliveros] &nbsp;·&nbsp;
+    <strong>Fecha de elaboración:</strong> Junio 2026 &nbsp;·&nbsp;
+    <strong>Tecnologías:</strong> HTML5 + SVG inline + JavaScript vanilla<br>
+    Visualización con fines analíticos e ilustrativos. Los datos pertenecen a la DGC y se reproducen bajo el marco de transparencia activa del Estado de Chile.
   </div>
 </footer>
 
@@ -148,7 +294,7 @@ const SECTORS=[...new Set(data.map(r=>r.s))].sort();
 const ESTADOS=['Operación','Construcción y Operación','Construcción','Finalizado'];
 const PLAZOS=[['fijo','Fijo'],['variable','Variable']];
 
-const sel={S:new Set(),E:new Set(),P:new Set()};
+const sel={S:new Set(),R:new Set(),E:new Set(),P:new Set()};
 
 function buildPills(){
   const fS=document.getElementById('fS');
@@ -160,6 +306,19 @@ function buildPills(){
     el.className='pill'; el.dataset.cat='S'; el.dataset.val=s;
     el.innerHTML=`${s} <span class="cnt">${n}</span>`;
     fS.appendChild(el);
+  });
+  // Region pills, ordered by frequency
+  const regCount=new Map();
+  data.forEach(r=>{
+    splitRegions(r.r).forEach(reg=>regCount.set(reg,(regCount.get(reg)||0)+1));
+  });
+  const REGIONS=[...regCount.entries()].sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+  const fR=document.getElementById('fR'); fR.innerHTML='';
+  REGIONS.forEach(reg=>{
+    const el=document.createElement('span');
+    el.className='pill'; el.dataset.cat='R'; el.dataset.val=reg;
+    el.innerHTML=`${reg} <span class="cnt">${regCount.get(reg)}</span>`;
+    fR.appendChild(el);
   });
   const fE=document.getElementById('fE');
   fE.innerHTML='';
@@ -243,6 +402,429 @@ function fmtUF(p){
   if(p>=1e3) return (p/1e3).toFixed(0)+' M UF';
   return Math.round(p)+' UF';
 }
+function fmtUFShort(p){
+  if(p==null||p===0) return '0';
+  if(p>=1e6) return (p/1e6).toFixed(1)+' MM';
+  if(p>=1e3) return (p/1e3).toFixed(0)+'k';
+  return Math.round(p);
+}
+function fmtNum(n){return n.toLocaleString('es-CL',{maximumFractionDigits:1});}
+
+// Region normalization: a single record can list multiple regions separated by ';' or ','
+function splitRegions(rawR){
+  if(!rawR) return ['(Sin región)'];
+  const norm=rawR.replace(/,/g,';');
+  let parts=norm.split(';').map(s=>s.trim()).filter(Boolean);
+  parts=parts.map(p=>p
+    .replace(/^Metropolitana de Santiago$/i,'Metropolitana')
+    .replace(/^Metropolitana$/i,'Metropolitana')
+    .replace(/^La Araucan[íi]a$/i,'Araucanía')
+    .replace(/^Araucan[íi]a$/i,'Araucanía')
+    .replace(/^Libertador General Bernardo O'Higgins$/i,"O'Higgins")
+    .replace(/^Magallanes y de la Antártica Chilena$/i,'Magallanes')
+    .replace(/^Ays[ée]n del General Carlos Ib[áa]ñez del Campo$/i,'Aysén')
+  );
+  return [...new Set(parts)];
+}
+
+// When region filter is active, share = (regions matching filter) / (total regions of project).
+// This way multiregional projects contribute proportionally to filtered regions only.
+function shareForRecord(r){
+  if(!sel.R.size) return 1;
+  const regs=splitRegions(r.r);
+  const matching=regs.filter(reg=>sel.R.has(reg)).length;
+  return regs.length>0 ? matching/regs.length : 0;
+}
+function isMultiregional(r){
+  return splitRegions(r.r).length>1;
+}
+
+// Sector color palette (consistent)
+const SECTOR_COLOR={
+  'Vial interurbana':'#185FA5',
+  'Vial urbana':'#5A8FBF',
+  'Aeroportuaria':'#0F6E56',
+  'Hospitalaria':'#D85A30',
+  'Penitenciaria':'#8B5CF6',
+  'Edificación pública y equipamiento urbano':'#E8B547',
+  'Soluciones hídricas':'#16A2BD'
+};
+function sectorColor(s){return SECTOR_COLOR[s]||'#888'}
+
+// ============== CHART DRAWING ==============
+
+function drawHBarChart(elId, items, opts){
+  // items: [{label, value, color, sub}]
+  const el=document.getElementById(elId);
+  if(!items.length){el.innerHTML='<div style="font-size:11.5px;color:var(--muted-2);padding:30px 0;text-align:center;font-style:italic">Sin datos para los filtros activos</div>';return;}
+  const W=opts.W||440, RH=opts.rh||24, PAD_L=opts.labelW||130, PAD_R=70, PAD_T=10, PAD_B=24;
+  const N=items.length;
+  const H=PAD_T+PAD_B+N*RH;
+  const maxV=Math.max(...items.map(i=>i.value), 1);
+  const barW=W-PAD_L-PAD_R;
+
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">`;
+  // x-axis grid (4 ticks) — subtle
+  for(let t=1;t<=4;t++){
+    const v=maxV*t/4;
+    const x=PAD_L+(v/maxV)*barW;
+    svg+=`<line x1="${x}" y1="${PAD_T}" x2="${x}" y2="${H-PAD_B}" stroke="#f1efe8" stroke-width="1"/>`;
+    svg+=`<text class="axis-label" x="${x}" y="${H-PAD_B+13}" text-anchor="middle">${opts.fmt?opts.fmt(v):fmtNum(v)}</text>`;
+  }
+  // baseline
+  svg+=`<line x1="${PAD_L}" y1="${PAD_T}" x2="${PAD_L}" y2="${H-PAD_B}" stroke="#d4d3cb" stroke-width="1"/>`;
+
+  items.forEach((it,i)=>{
+    const y=PAD_T+i*RH+3;
+    const bh=RH-6;
+    const w=(it.value/maxV)*barW;
+    // label
+    const lbl=it.label.length>22?it.label.slice(0,20)+'…':it.label;
+    svg+=`<text class="axis-value" x="${PAD_L-8}" y="${y+bh/2+3.5}" text-anchor="end">${lbl}</text>`;
+    // bar with subtle gradient
+    svg+=`<rect class="bar-h" x="${PAD_L}" y="${y}" width="${Math.max(2,w)}" height="${bh}" rx="2.5" fill="${it.color}" data-tt="${it.label}|${opts.ttFmt?opts.ttFmt(it.value,it):fmtNum(it.value)}${it.sub?'|'+it.sub:''}"/>`;
+    // value label at end of bar
+    const vTxt=opts.fmt?opts.fmt(it.value):fmtNum(it.value);
+    if(w>52){
+      svg+=`<text class="bar-value-white" x="${PAD_L+w-6}" y="${y+bh/2+3.5}" text-anchor="end">${vTxt}</text>`;
+    }else{
+      svg+=`<text class="bar-value" x="${PAD_L+w+5}" y="${y+bh/2+3.5}">${vTxt}</text>`;
+    }
+  });
+  svg+='</svg>';
+  el.innerHTML=svg;
+  attachChartTooltips(el);
+}
+
+function drawDonut(elId, items){
+  const el=document.getElementById(elId);
+  if(!items.length){el.innerHTML='<div style="font-size:11px;color:#aaa;padding:20px 0;text-align:center">Sin datos</div>';return;}
+  const total=items.reduce((a,b)=>a+b.value,0);
+  if(total===0){el.innerHTML='<div style="font-size:11.5px;color:var(--muted-2);padding:30px 0;text-align:center;font-style:italic">Sin presupuesto registrado</div>';return;}
+  const W=460,H=210,CX=110,CY=H/2,R=82,r=50;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">`;
+  let a0=-Math.PI/2;
+  items.forEach(it=>{
+    const frac=it.value/total;
+    const a1=a0+frac*2*Math.PI;
+    const x0=CX+R*Math.cos(a0), y0=CY+R*Math.sin(a0);
+    const x1=CX+R*Math.cos(a1), y1=CY+R*Math.sin(a1);
+    const xi0=CX+r*Math.cos(a0), yi0=CY+r*Math.sin(a0);
+    const xi1=CX+r*Math.cos(a1), yi1=CY+r*Math.sin(a1);
+    const large=(a1-a0)>Math.PI?1:0;
+    const path=`M ${x0} ${y0} A ${R} ${R} 0 ${large} 1 ${x1} ${y1} L ${xi1} ${yi1} A ${r} ${r} 0 ${large} 0 ${xi0} ${yi0} Z`;
+    // White stroke for separation between slices
+    svg+=`<path class="donut-slice" d="${path}" fill="${it.color}" stroke="#fff" stroke-width="2" data-tt="${it.label}|${fmtUF(it.value)}|${(frac*100).toFixed(1)}%"/>`;
+    a0=a1;
+  });
+  // center text with dropshadow effect
+  svg+=`<text x="${CX}" y="${CY-2}" text-anchor="middle" font-size="17" font-weight="700" fill="#15161a" letter-spacing="-0.5">${fmtUFShort(total)}</text>`;
+  svg+=`<text x="${CX}" y="${CY+13}" text-anchor="middle" font-size="9.5" fill="#74757c" font-weight="600" letter-spacing="0.8" style="text-transform:uppercase">UF Total</text>`;
+  // legend right
+  let ly=12;
+  items.forEach(it=>{
+    svg+=`<rect x="230" y="${ly}" width="11" height="11" rx="2" fill="${it.color}"/>`;
+    const lbl=it.label.length>26?it.label.slice(0,24)+'…':it.label;
+    svg+=`<text x="246" y="${ly+9.5}" font-size="10.5" fill="#3d3e44" font-weight="500">${lbl}</text>`;
+    const pct=(it.value/total*100).toFixed(1);
+    svg+=`<text x="${W-6}" y="${ly+9.5}" text-anchor="end" font-size="10.5" font-weight="700" fill="#15161a" font-variant-numeric="tabular-nums">${pct}%</text>`;
+    ly+=20;
+  });
+  svg+='</svg>';
+  el.innerHTML=svg;
+  attachChartTooltips(el);
+}
+
+function drawStepLine(elId, points, opts){
+  // points: [{t, v}] where t is decimal year (e.g. 2015.5), sorted ascending
+  const el=document.getElementById(elId);
+  if(!points.length){el.innerHTML='<div style="font-size:11px;color:#aaa;padding:20px 0;text-align:center">Sin datos</div>';return;}
+  const W=opts.W||620, H=opts.H||220, PAD_L=opts.padL||52, PAD_R=14, PAD_T=14, PAD_B=24;
+  const innerW=W-PAD_L-PAD_R, innerH=H-PAD_T-PAD_B;
+  const minT=opts.minT!=null?opts.minT:Math.floor(points[0].t);
+  const maxT=opts.maxT!=null?opts.maxT:Math.ceil(points[points.length-1].t);
+  const maxV=Math.max(opts.minScale||1, ...points.map(p=>p.v));
+  const xScale=t=>PAD_L+((t-minT)/(maxT-minT||1))*innerW;
+  const yScale=v=>PAD_T+innerH-(v/maxV)*innerH;
+  const color=opts.color||'#185FA5';
+  const fmt=opts.fmt||(v=>fmtNum(v));
+
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">`;
+  // gradient defs for area fill
+  const gradId='lg_'+elId;
+  svg+=`<defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity="0.28"/><stop offset="100%" stop-color="${color}" stop-opacity="0.02"/></linearGradient></defs>`;
+  // y grid (lighter, refined)
+  for(let i=0;i<=4;i++){
+    const v=maxV*i/4;
+    const y=yScale(v);
+    svg+=`<line x1="${PAD_L}" y1="${y}" x2="${W-PAD_R}" y2="${y}" stroke="#f1efe8" stroke-width="1"/>`;
+    svg+=`<text class="axis-label" x="${PAD_L-6}" y="${y+3.5}" text-anchor="end">${fmt(v)}</text>`;
+  }
+  // x ticks every 5 years
+  for(let y=Math.ceil(minT/5)*5;y<=maxT;y+=5){
+    const x=xScale(y);
+    svg+=`<text class="axis-label" x="${x}" y="${H-PAD_B+13}" text-anchor="middle">${y}</text>`;
+  }
+  // today line
+  const todayT=TODAY.getFullYear()+TODAY.getMonth()/12;
+  if(todayT>=minT && todayT<=maxT){
+    const x=xScale(todayT);
+    svg+=`<line x1="${x}" y1="${PAD_T}" x2="${x}" y2="${H-PAD_B}" stroke="#dc3545" stroke-width="1" opacity="0.55" stroke-dasharray="3,3"/>`;
+    svg+=`<text class="axis-label" x="${x+4}" y="${PAD_T+9}" fill="#dc3545" font-weight="700">HOY</text>`;
+  }
+  // baseline
+  svg+=`<line x1="${PAD_L}" y1="${H-PAD_B}" x2="${W-PAD_R}" y2="${H-PAD_B}" stroke="#d4d3cb" stroke-width="1"/>`;
+
+  // Build step path
+  let path=`M ${xScale(points[0].t)} ${yScale(points[0].v)}`;
+  for(let i=1;i<points.length;i++){
+    path+=` L ${xScale(points[i].t)} ${yScale(points[i-1].v)} L ${xScale(points[i].t)} ${yScale(points[i].v)}`;
+  }
+  // Area fill with gradient
+  const lastX=xScale(points[points.length-1].t);
+  const firstX=xScale(points[0].t);
+  const baseY=yScale(0);
+  const areaPath=path+` L ${lastX} ${baseY} L ${firstX} ${baseY} Z`;
+  svg+=`<path d="${areaPath}" fill="url(#${gradId})"/>`;
+  svg+=`<path d="${path}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="miter"/>`;
+
+  // Peak annotation
+  let peak=points[0];
+  points.forEach(p=>{if(p.v>peak.v)peak=p;});
+  if(peak.v>0){
+    const px=xScale(peak.t), py=yScale(peak.v);
+    // halo
+    svg+=`<circle cx="${px}" cy="${py}" r="5.5" fill="${color}" opacity="0.18"/>`;
+    svg+=`<circle cx="${px}" cy="${py}" r="3.5" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
+    const label=`Máx: ${fmt(peak.v)} (${Math.floor(peak.t)})`;
+    const lx=px>W*0.6?px-8:px+8;
+    const anchor=px>W*0.6?'end':'start';
+    svg+=`<text x="${lx}" y="${py-9}" font-size="10.5" font-weight="700" fill="${color}" text-anchor="${anchor}" font-family="${opts.font||'inherit'}">${label}</text>`;
+  }
+
+  // Invisible hover band per year for tooltips
+  for(let y=Math.floor(minT);y<=Math.ceil(maxT);y++){
+    const x=xScale(y), x2=xScale(y+1);
+    const bw=Math.max(2,x2-x);
+    let v=0;
+    for(const p of points){ if(p.t<=y+0.5) v=p.v; else break; }
+    svg+=`<rect x="${x}" y="${PAD_T}" width="${bw}" height="${innerH}" fill="transparent" data-tt="Año ${y}|${fmt(v)}${opts.ttSuffix||''}"/>`;
+  }
+  svg+='</svg>';
+  el.innerHTML=svg;
+  attachChartTooltips(el);
+}
+
+// Build stock-over-time time series from filtered records.
+// Each record contributes its value (1 for count, p for investment) during [ini, fin].
+// We construct events: +val at ini, -val at fin, then sort and accumulate.
+function stockTimeSeries(records, valFn){
+  const events=[];
+  records.forEach(r=>{
+    const ini=new Date(r.i);
+    const fin=r.fr?new Date(r.fr):null;
+    if(isNaN(ini)) return;
+    const tIni=ini.getFullYear()+ini.getMonth()/12+ini.getDate()/365;
+    const v=valFn(r);
+    if(v==null||v===0) return;
+    events.push({t:tIni, dv:v});
+    if(fin && !isNaN(fin)){
+      const tFin=fin.getFullYear()+fin.getMonth()/12+fin.getDate()/365;
+      events.push({t:tFin, dv:-v});
+    }
+  });
+  events.sort((a,b)=>a.t-b.t || b.dv-a.dv); // process additions before subtractions on same t
+  if(!events.length) return [];
+  // Aggregate events that share the same t
+  const merged=[];
+  events.forEach(e=>{
+    if(merged.length && Math.abs(merged[merged.length-1].t-e.t)<1e-9){
+      merged[merged.length-1].dv+=e.dv;
+    } else {
+      merged.push({t:e.t,dv:e.dv});
+    }
+  });
+  // Build step points: for each event apply delta and emit a step
+  const points=[];
+  let cum=0;
+  // Start at t = first event with v=0
+  points.push({t:merged[0].t, v:0});
+  merged.forEach(e=>{
+    cum+=e.dv;
+    points.push({t:e.t, v:cum});
+  });
+  return points;
+}
+
+function attachChartTooltips(rootEl){
+  rootEl.querySelectorAll('[data-tt]').forEach(node=>{
+    node.addEventListener('mouseenter',ev=>{
+      const parts=node.dataset.tt.split('|');
+      const tt=document.getElementById('tt');
+      tt.innerHTML=`<b>${parts[0]}</b><br>${parts.slice(1).map(p=>`<span class="sec">${p}</span>`).join('<br>')}`;
+      tt.style.display='block';
+      tt.style.left=Math.min(ev.clientX+14,window.innerWidth-260)+'px';
+      tt.style.top=(ev.clientY-10)+'px';
+    });
+    node.addEventListener('mousemove',ev=>{
+      const tt=document.getElementById('tt');
+      tt.style.left=Math.min(ev.clientX+14,window.innerWidth-260)+'px';
+      tt.style.top=(ev.clientY-10)+'px';
+    });
+    node.addEventListener('mouseleave',()=>document.getElementById('tt').style.display='none');
+  });
+}
+
+function renderAnalytics(filteredRecords){
+  // Effective share per record: when region filter is active, attribute only the
+  // fraction of the record's value to the selected region(s).
+  const hasRegFilter=sel.R.size>0;
+  function eff(r){
+    if(!hasRegFilter) return 1;
+    const regs=splitRegions(r.r);
+    const matching=regs.filter(reg=>sel.R.has(reg)).length;
+    return matching/regs.length;
+  }
+
+  // KPIs use effective shares for sums
+  const totalInv=filteredRecords.reduce((a,r)=>a+(r.p||0)*eff(r),0);
+  const totalNFrac=filteredRecords.reduce((a,r)=>a+eff(r),0);
+  const totalN=filteredRecords.length;  // # contracts touching the filter
+  const avgInv=totalNFrac?totalInv/totalNFrac:0;
+  const sectores=new Set(filteredRecords.map(r=>r.s)).size;
+  const regsTouched=new Set(filteredRecords.flatMap(r=>splitRegions(r.r)));
+  const regsToShow=hasRegFilter?sel.R.size:regsTouched.size;
+  const enOp=filteredRecords.filter(r=>r.e==='Operación').length;
+  const enConst=filteredRecords.filter(r=>r.e==='Construcción'||r.e==='Construcción y Operación').length;
+
+  const invLbl=hasRegFilter?'Inversión atribuida a regiones filtradas':'Inversión total nacional';
+  const nLbl=hasRegFilter?
+    `Contratos (${totalNFrac.toFixed(1)} eq. completos)`:'Contratos';
+  document.getElementById('kpiRow').innerHTML=`
+<div class="kpi accent"><div class="v">${fmtUFShort(totalInv)}<span class="u">UF</span></div><div class="k">${invLbl}</div></div>
+<div class="kpi"><div class="v">${totalN}</div><div class="k">${nLbl}</div></div>
+<div class="kpi"><div class="v">${fmtUFShort(avgInv)}<span class="u">UF</span></div><div class="k">Inversión promedio</div></div>
+<div class="kpi"><div class="v">${regsToShow}<span class="u">/ 16</span></div><div class="k">${hasRegFilter?'Regiones seleccionadas':'Regiones con presencia'}</div></div>
+<div class="kpi"><div class="v">${sectores}<span class="u">/ 7</span></div><div class="k">Sectores activos</div></div>
+<div class="kpi"><div class="v">${enOp}</div><div class="k">En operación</div></div>
+<div class="kpi"><div class="v">${enConst}</div><div class="k">En construcción</div></div>
+`;
+
+  // Investment & count by region — only show selected regions when region filter active
+  const regInv=new Map(), regCnt=new Map();
+  filteredRecords.forEach(r=>{
+    const rs=splitRegions(r.r);
+    rs.forEach(reg=>{
+      // When filtering by region, only attribute to selected regions
+      if(hasRegFilter && !sel.R.has(reg)) return;
+      const share=1/rs.length, presupShare=(r.p||0)/rs.length;
+      regInv.set(reg,(regInv.get(reg)||0)+presupShare);
+      regCnt.set(reg,(regCnt.get(reg)||0)+share);
+    });
+  });
+  const invByReg=[...regInv.entries()].map(([k,v])=>({label:k,value:v,color:'#185FA5'})).sort((a,b)=>b.value-a.value);
+  const cntByReg=[...regCnt.entries()].map(([k,v])=>({label:k,value:v,color:'#0F6E56'})).sort((a,b)=>b.value-a.value);
+  drawHBarChart('ch_inv_region', invByReg, {W:440,rh:22,labelW:120,fmt:fmtUFShort,ttFmt:(v)=>fmtUF(v)+' UF'});
+  drawHBarChart('ch_num_region', cntByReg, {W:440,rh:22,labelW:120,fmt:v=>fmtNum(v),ttFmt:(v)=>fmtNum(v)+' contratos'});
+  const subRegHint=hasRegFilter?' (atribuido)':'';
+  document.getElementById('tot_inv_region').textContent='Total'+subRegHint+': '+fmtUF(totalInv);
+  document.getElementById('tot_num_region').textContent='Total'+subRegHint+': '+(hasRegFilter?totalNFrac.toFixed(1):totalN)+' contratos';
+
+  // Investment by sector — uses effective shares
+  const secMap=new Map();
+  filteredRecords.forEach(r=>{ secMap.set(r.s,(secMap.get(r.s)||0)+(r.p||0)*eff(r)); });
+  const secItems=[...secMap.entries()].map(([k,v])=>({label:k,value:v,color:sectorColor(k)})).sort((a,b)=>b.value-a.value);
+  drawDonut('ch_inv_sector', secItems);
+  document.getElementById('tot_inv_sector').textContent='Total: '+fmtUF(totalInv);
+
+  // Stock series — uses effective shares
+  const countSeries=stockTimeSeries(filteredRecords, r=>eff(r));
+  const invSeries=stockTimeSeries(filteredRecords, r=>(r.p||0)*eff(r));
+  const allT=[...countSeries,...invSeries].map(p=>p.t);
+  const minT=allT.length?Math.min(...allT):1993;
+  const maxT=allT.length?Math.max(...allT):2070;
+  drawStepLine('ch_count_time', countSeries, {
+    W:620, H:220, color:'#0F6E56',
+    minT, maxT,
+    fmt:v=>fmtNum(v),
+    ttSuffix:hasRegFilter?' contratos eq. vigentes (atribuidos)':' contratos vigentes'
+  });
+  drawStepLine('ch_inv_time', invSeries, {
+    W:620, H:220, color:'#185FA5',
+    minT, maxT,
+    fmt:v=>fmtUFShort(v),
+    ttSuffix:hasRegFilter?' UF inversión vigente (atribuida)':' UF de inversión vigente'
+  });
+  const peakCount=countSeries.reduce((m,p)=>p.v>m.v?p:m,{t:0,v:0});
+  const peakInv=invSeries.reduce((m,p)=>p.v>m.v?p:m,{t:0,v:0});
+  document.getElementById('tot_count_time').textContent='Máx histórico: '+fmtNum(peakCount.v)+' en '+Math.floor(peakCount.t);
+  document.getElementById('tot_inv_time').textContent='Máx histórico: '+fmtUF(peakInv.v)+' en '+Math.floor(peakInv.t);
+
+  // Multiregional breakdown card — appears only when region filter is active
+  renderMultiregionalCard(filteredRecords);
+}
+
+function renderMultiregionalCard(filteredRecords){
+  const card=document.getElementById('multi_card');
+  if(!sel.R.size){ card.style.display='none'; return; }
+  const selRegs=[...sel.R];
+  // Multiregional = projects with 2+ regions, where at least one is selected
+  const items=filteredRecords
+    .map(r=>({r, regs:splitRegions(r.r)}))
+    .filter(x=>x.regs.length>1)
+    .map(x=>{
+      const matching=x.regs.filter(reg=>sel.R.has(reg));
+      return {r:x.r, regs:x.regs, matching, share:matching.length/x.regs.length, attributed:(x.r.p||0)*(matching.length/x.regs.length)};
+    })
+    .sort((a,b)=>b.attributed-a.attributed);
+
+  if(!items.length){
+    card.style.display='block';
+    card.innerHTML=`<h3>Proyectos multirregionales en la selección</h3>
+    <div class="desc">Ningún proyecto multirregional toca ${selRegs.length>1?'las regiones seleccionadas':'la región seleccionada'} (${selRegs.join(', ')}).</div>`;
+    return;
+  }
+
+  const totalAttributed=items.reduce((a,x)=>a+x.attributed,0);
+  const totalFull=items.reduce((a,x)=>a+(x.r.p||0),0);
+
+  card.style.display='block';
+  let html=`<h3>Proyectos multirregionales — aporte a ${selRegs.length>1?'las regiones seleccionadas':'la región seleccionada'} <span class="ttotal">${items.length} proyecto${items.length===1?'':'s'} · ${fmtUF(totalAttributed)} atribuido</span></h3>
+  <div class="desc">Estos proyectos cruzan varias regiones. Su presupuesto se reparte equitativamente entre las regiones que tocan. La columna <b>"Atribuido"</b> indica el monto que se sumó a ${selRegs.length>1?'las regiones filtradas':'la región filtrada'}.</div>
+  <div style="overflow-x:auto"><table style="width:100%;font-size:11px;border-collapse:collapse">
+    <thead style="background:#f5f4f0">
+      <tr style="color:#666;text-align:left">
+        <th style="padding:6px 8px;font-weight:600">Proyecto</th>
+        <th style="padding:6px 8px;font-weight:600">Sector</th>
+        <th style="padding:6px 8px;font-weight:600">Regiones que toca</th>
+        <th style="padding:6px 8px;font-weight:600;text-align:right">Presupuesto total</th>
+        <th style="padding:6px 8px;font-weight:600;text-align:center">Proporción</th>
+        <th style="padding:6px 8px;font-weight:600;text-align:right">Atribuido</th>
+      </tr>
+    </thead><tbody>`;
+  items.forEach((it,i)=>{
+    const bg=i%2===0?'#fff':'#fafaf8';
+    const regsHtml=it.regs.map(reg=>{
+      const isSel=sel.R.has(reg);
+      return isSel
+        ?`<span style="background:#1a1a18;color:#fff;padding:1px 6px;border-radius:8px;font-weight:600;display:inline-block;margin:1px">${reg}</span>`
+        :`<span style="background:#eaeae5;color:#666;padding:1px 6px;border-radius:8px;display:inline-block;margin:1px">${reg}</span>`;
+    }).join('');
+    html+=`<tr style="background:${bg};border-bottom:1px solid #eee">
+      <td style="padding:6px 8px;color:#1a1a18">${it.r.cn.length>54?it.r.cn.slice(0,52)+'…':it.r.cn}</td>
+      <td style="padding:6px 8px;color:#666">${it.r.s}</td>
+      <td style="padding:6px 8px">${regsHtml}</td>
+      <td style="padding:6px 8px;text-align:right;color:#1a1a18;font-weight:500">${fmtUF(it.r.p)}</td>
+      <td style="padding:6px 8px;text-align:center;font-family:monospace;color:#185FA5;font-weight:600">${it.matching.length}/${it.regs.length}</td>
+      <td style="padding:6px 8px;text-align:right;color:#185FA5;font-weight:700">${fmtUF(it.attributed)}</td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div>
+  <div style="font-size:10.5px;color:#888;margin-top:8px;padding-top:8px;border-top:1px dashed #e0dfd8">
+    <b>Total atribuido por proyectos multirregionales:</b> ${fmtUF(totalAttributed)} (de ${fmtUF(totalFull)} en presupuestos completos · proporción agregada: ${(totalAttributed/totalFull*100).toFixed(1)}%)
+  </div>`;
+  card.innerHTML=html;
+}
 
 // Row height = sum of all sub-bar heights in the group + gaps + padding
 function groupRowHeight(segs){
@@ -274,6 +856,7 @@ function render(){
   let filtGroups=[...groupMap.entries()].map(([g,segs])=>{
     const matched=segs.filter(r=>{
       if(sel.S.size && !sel.S.has(r.s))return false;
+      if(sel.R.size && !splitRegions(r.r).some(reg=>sel.R.has(reg)))return false;
       if(sel.E.size && !sel.E.has(r.e))return false;
       if(sel.P.size && !sel.P.has(r.pt))return false;
       return true;
@@ -284,11 +867,15 @@ function render(){
   // Update live counts
   const totalC=filtGroups.reduce((acc,x)=>acc+x[1].length,0);
   const totalG=filtGroups.length;
-  const anyFilter=sel.S.size||sel.E.size||sel.P.size;
+  const anyFilter=sel.S.size||sel.R.size||sel.E.size||sel.P.size;
   document.getElementById('lcContratos').textContent=totalC;
   document.getElementById('lcGrupos').textContent=totalG;
   document.getElementById('liveCount').querySelector('.lbl').textContent =
     anyFilter ? `Contratos filtrados / infraestructuras` : `Contratos totales / infraestructuras`;
+
+  // Analytics dashboard
+  const filteredRecords=filtGroups.flatMap(x=>x[1]);
+  renderAnalytics(filteredRecords);
 
   let yCursor=TOP_PAD;
   const groupY=filtGroups.map(([g,m,allSegs])=>{
